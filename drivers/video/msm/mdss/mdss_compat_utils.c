@@ -125,8 +125,8 @@ static void  __copy_atomic_commit_struct(struct mdp_layer_commit  *commit,
 	unsigned int count = (destsize <= srcsize ? destsize : srcsize);
 	commit->version = commit32->version;
 	commit->commit_v1.flags = commit32->commit_v1.flags;
-	commit->commit_v1.release_fence = commit32->commit_v1.release_fence;
-	commit->commit_v1.retire_fence = commit32->commit_v1.retire_fence;
+//	commit->commit_v1.release_fence = commit32->commit_v1.release_fence;
+//	commit->commit_v1.retire_fence = commit32->commit_v1.retire_fence;
 	commit->commit_v1.input_layer_cnt =
 		commit32->commit_v1.input_layer_cnt;
 	commit->commit_v1.left_roi = commit32->commit_v1.left_roi;
@@ -4295,8 +4295,6 @@ int mdss_fb_compat_ioctl(struct fb_info *info, unsigned int cmd,
 
 	if (!info || !info->par)
 		return -EINVAL;
-
-    printk("linson run mdss_fb_compat_ioctl\n");
 
 	cmd = __do_compat_ioctl_nr(cmd);
 	switch (cmd) {
