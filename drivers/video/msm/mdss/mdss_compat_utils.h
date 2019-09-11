@@ -538,6 +538,7 @@ struct mdp_layer_commit_v1_32 {
 	uint32_t                dest_scaler_cnt;
 	compat_caddr_t		frc_info;
 	uint32_t		reserved[MDP_LAYER_COMMIT_V1_PAD];
+	uint32_t 		dummy;
 };
 
 struct mdp_layer_commit32 {
