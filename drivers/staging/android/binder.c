@@ -79,7 +79,7 @@
 #include "binder_trace.h"
 
 static HLIST_HEAD(binder_deferred_list);
-static DEFINE_MUTEX(binder_deferred_lock);
+static DEFINE_SPINLOCK(binder_deferred_lock);
 
 static HLIST_HEAD(binder_devices);
 static HLIST_HEAD(binder_procs);
@@ -5099,7 +5099,7 @@ static int binder_deferred_thread(void *ignore)
 		} while (ret == -ERESTARTSYS);
 		if (kthread_should_stop())
 			break;
-		mutex_lock(&binder_deferred_lock);
+		spin_lock(&binder_deferred_lock);
 		if (!hlist_empty(&binder_deferred_list)) {
 			proc = hlist_entry(binder_deferred_list.first,
 					struct binder_proc, deferred_work_node);
@@ -5110,7 +5110,7 @@ static int binder_deferred_thread(void *ignore)
 			proc = NULL;
 			defer = 0;
 		}
-		mutex_unlock(&binder_deferred_lock);
+		spin_unlock(&binder_deferred_lock);
 
 		files = NULL;
 		if (proc != NULL) {
@@ -5136,12 +5136,12 @@ static int binder_deferred_thread(void *ignore)
 static void
 binder_defer_work(struct binder_proc *proc, enum binder_deferred_state defer)
 {
-	mutex_lock(&binder_deferred_lock);
+	spin_lock(&binder_deferred_lock);
 	proc->deferred_work |= defer;
 	if (hlist_unhashed(&proc->deferred_work_node))
 		hlist_add_head(&proc->deferred_work_node,
 				&binder_deferred_list);
-	mutex_unlock(&binder_deferred_lock);
+	spin_unlock(&binder_deferred_lock);
 	wake_up_interruptible(&binder_deferred_wq);
 }
 
