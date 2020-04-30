@@ -804,3 +804,6 @@ CONFIG_SQUASHFS_DECOMP_SINGLE=y
 # on android 9 twrp or other os access /data
 CONFIG_QUOTA_TREE=y
 CONFIG_QUOTACTL=y
+
+# fat32 support
+CONFIG_VFAT_FS=y
